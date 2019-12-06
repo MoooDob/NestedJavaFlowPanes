@@ -4,7 +4,7 @@ playing around with nested `FlowPane`s in Java
 
 
 
-![nested FlowPanes screenshot](.\images\screenshot_01.png)
+![nested FlowPanes screenshot](images\screenshot_01.png)
 
 
 
