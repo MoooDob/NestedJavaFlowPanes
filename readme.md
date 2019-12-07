@@ -32,3 +32,24 @@ int seed = 1534;
 `maxNumberOfPanes` declares the number of simple panes per nesting level (without child panes). In the last version, only the *leaf* panes will be colorized, all *branching* panes get only a black border. You can change this behavior by uncommenting the line `flowPane.setStyle`.
 
 In each flow pane the items are sorted by number. Their height and size is randomly calculated. The maximal height of a pane is the maximum out of the height of the squared area of all child panes (child flow pane too) and the height of the highest child pane (child flow panes too), 
+
+## V 0.3 Nested structure from directory structure
+
+![nested FlowPanes screenshot](./images/screenshot_03a.png)
+
+![nested FlowPanes screenshot](./images/screenshot_03b.png)
+
+This version uses the structure of a directory and its subdirectories to create the nested flowpane structure. The height and the width of the panes representing the files are the lines of code (LOC) and the maximum length of all lines of this file. 
+
+The presentation can be tweaked with the following variables:
+
+```java
+float transformFactor = 1.0f;
+int seed = 1534;
+```
+
+The transformation factor controls if the created boxes are wider, longer or squared. A factor of 0 tries to create squared boxes (if possible), a factor greater 1 creates longer boxes and a factor smaller than 1 creates wider boxes.
+
+The seed simply controls the color of the panes.
+
+You can zoom the content with the mouse wheel.
