@@ -53,3 +53,18 @@ The transformation factor controls if the created boxes are wider, longer or squ
 The seed simply controls the color of the panes.
 
 You can zoom the content with the mouse wheel.
+
+## V 0.4 Simple vertical layout
+
+![nested FlowPanes screenshot](./images/screenshot_04a.png)
+
+Now it is possible to define if the files should be shown, if the borders should be shown, if a padding around the `FlowPane`s should be used or the size of the gap: 
+
+```java
+boolean showFiles = false;
+boolean showBorder = false;
+boolean usePadding = false;
+int gap = 3;
+```
+This version aligns all node strait top down. 
+
