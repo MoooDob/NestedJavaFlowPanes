@@ -24,6 +24,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -34,14 +35,15 @@ public class FlowPaneExample extends Application {
 
 	float transformFactor = 1.0f;
 
-	int seed = 1534;
+	int seed = 1524;
 	Random randomizer;
 	
 	int gap = 3;
 	
-	boolean showFiles = false;
+	boolean showFiles = true;
+	boolean showRandomDirectoryBackgroundColor = true;
 	boolean showBorder = false;
-	boolean usePadding = false;
+	boolean usePadding = true;
 	boolean useFixedFileSize = false;
 
 	@Override
@@ -51,7 +53,7 @@ public class FlowPaneExample extends Application {
 		randomizer = new Random(seed);
 
 		// mother of all flow panes
-		final Pane flowPane; 
+		final Pane root; 
 
 		// ask for directory
 
@@ -59,24 +61,24 @@ public class FlowPaneExample extends Application {
 		File selectedDirectory = dc.showDialog(stage);
 
 		if (selectedDirectory == null) {
-			flowPane = null;
+			root = null;
 			System.out.println("No directory selected. Terminated.");
 		} else {
 			// mother of all flow panes
-			flowPane = createSubTree(selectedDirectory);
+			root = createSubTree(selectedDirectory);
 		}
 
 		// ScrollPane
 		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setContent(flowPane);
+		scrollPane.setContent(root);
 		scrollPane.setPannable(true);
 		
 		// Create operator
 		AnimatedZoomOperator zoomOperator = new AnimatedZoomOperator();
 
-		if (flowPane != null) {
+		if (root != null) {
 			// Listen to scroll events (similarly you could listen to a button click, slider, ...)
-			flowPane.setOnScroll(new EventHandler<ScrollEvent>() {
+			root.setOnScroll(new EventHandler<ScrollEvent>() {
 			    @Override
 			    public void handle(ScrollEvent event) {
 			        double zoomFactor = 1.5;
@@ -84,7 +86,7 @@ public class FlowPaneExample extends Application {
 			            // zoom out
 			            zoomFactor = 1 / zoomFactor;
 			        }
-			        zoomOperator.zoom(flowPane, zoomFactor, event.getSceneX(), event.getSceneY());
+			        zoomOperator.zoom(root, zoomFactor, event.getSceneX(), event.getSceneY());
 			    }
 			});
 		}
@@ -104,28 +106,31 @@ public class FlowPaneExample extends Application {
 		stage.setScene(scene);
 
 		// Displaying the contents of the stage
-		stage.show();		
+		stage.show();	
 		
 	}
 
 	private Pane createSubTree(File directory) {
 		
 		// Creating a Flow Pane
-		FlowPane flowPane = new FlowPane(Orientation.VERTICAL);
+		VBox vBox = new VBox();
 		
 		double maxPaneHeight = 0;
-		int totalArea = 0;
-		int totalNodesHeight = 0;
+		double totalArea = 0;
+		double totalPanesHeight = 0;
 
-		ArrayList<Node> nodes = new ArrayList<Node>();
+		ArrayList<Pane> panes = new ArrayList<Pane>();
 		
 		// Add label
 		Label newLabel = new Label(directory.getName());
 		newLabel.setFont(new Font(8.0f));
 		//newLabel.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
-		nodes.add(newLabel);		
-		//flowPane.getChildren().add(newLabel);
+		//nodes.add(newLabel);		
+		vBox.getChildren().add(newLabel);
+		
+		FlowPane flowPane = new FlowPane(Orientation.VERTICAL);
+		vBox.getChildren().add(flowPane);
 		
 				
 		int numSubDirs = 0;
@@ -136,11 +141,11 @@ public class FlowPaneExample extends Application {
 			File fileOrDirectory = new File(directory, fileOrDirectoryName);
 			
 			if (fileOrDirectory.isDirectory()) {
-				nodes.add(createSubTree(fileOrDirectory));
+				panes.add(createSubTree(fileOrDirectory));
 				numSubDirs++;
 			} else {
 				if (showFiles) {
-					nodes.add(createFilePane(fileOrDirectory));
+					panes.add(createFilePane(fileOrDirectory));
 				}
 			}
 		}
@@ -148,21 +153,36 @@ public class FlowPaneExample extends Application {
 		// Setting the horizontal and vertical gap between the nodes
 		flowPane.setHgap(gap);
 		flowPane.setVgap(gap);
+		vBox.setSpacing(0);
 		
 		if (usePadding) {flowPane.setPadding(new Insets(gap,gap,gap,gap));}
+		
+		vBox.setPadding(new Insets(1,1,1,1));
 
 		//flowPane.autosize();
 		
 		// Alignments
+		vBox.setAlignment(Pos.TOP_LEFT); 
 		flowPane.setAlignment(Pos.TOP_LEFT); 
 		flowPane.setColumnHalignment(HPos.LEFT); 
 		flowPane.setRowValignment(VPos.TOP); 
 
-		// flowPane.setStyle("-fx-background-color: rgba(" + randomizer.nextInt(255) +
-		// ", " + randomizer.nextInt(255) + ", " + randomizer.nextInt(255) + ", " +
-		// randomizer.nextFloat() + "); -fx-background-radius: 10;");
-		flowPane.setStyle("-fx-background-color: rgba(" + 255 + ", " + 255 + ", " + 255 + ", " + 0
-				+ "); -fx-background-radius: 10; " + (showBorder ? "-fx-border-color: gray" : "")
+		if (showRandomDirectoryBackgroundColor) {
+			vBox.setStyle("-fx-background-color: rgba(" + (randomizer.nextInt(155) + 100) +
+					", " + (randomizer.nextInt(155) + 100) + ", " + (randomizer.nextInt(155) + 100) + ", " +
+					1 + "); -fx-background-radius: 10;");
+		} else {
+//			vBox.setStyle("-fx-background-color: rgba(" + 255 + ", " + 255 + ", " + 255 + ", " + 0
+//					+ "); -fx-background-radius: 10; " + (showBorder ? "-fx-border-color: gray" : "")
+//			);
+			vBox.setStyle("-fx-background-color: rgba(" + 240 + ", " + 240 + ", " + 240 + ", " + 1
+					+ "); -fx-background-radius: 10; " + (showBorder ? "-fx-border-color: gray" : "")
+			);
+
+		}
+
+		flowPane.setStyle("-fx-background-color: rgba(" + 255 + ", " + 255 + ", " + 255 + ", " + 0.5f
+				+ "); -fx-background-radius: 10; " // + (showBorder ? "-fx-border-color: blue; -fx-border-style: dotted;" : "")
 		);
 
 
@@ -172,19 +192,19 @@ public class FlowPaneExample extends Application {
 
 		
 		// Adding all the nodes to the flow pane and add margins
-		for (Node node : nodes) {
+		for (Pane pane : panes) {
 
-			list.add(node);
+			list.add(pane);
 			
 			double currentHeight = 
-					(node instanceof FlowPane ? ((FlowPane)node).getPrefWrapLength() + 
+					(pane instanceof FlowPane ? ((FlowPane)pane).getPrefWrapLength() + 
 												(showBorder ? 2 : 0) /*top + bottom border*/ + 
 												(usePadding ? 2 * gap : 0) /*padding*/ 
-					: (node instanceof Pane ? ((Pane)node).getPrefHeight() : 12 /*label*/)
+					: (pane instanceof Pane ? ((Pane)pane).getPrefHeight() : 12 /*label*/)
 			);
 			maxPaneHeight = Math.max(maxPaneHeight, currentHeight);
-			totalNodesHeight += currentHeight;
-			// totalArea += p.getPrefHeight() * p.getPrefWidth();
+			totalPanesHeight += currentHeight;
+			totalArea += pane.getPrefHeight() * pane.getPrefWidth();
 //			System.out.println((p instanceof FlowPane ? "Folder" : "File") + ": " + ((Label)p.getChildren().get(0)).getText() + 
 //					" p.PrefHeight: " + p.getPrefHeight() + " p.PrefWidth: " + p.getPrefWidth() + 
 //					" p.Height: " + p.getHeight() + " p.Width: " + p.getWidth() +
@@ -193,18 +213,26 @@ public class FlowPaneExample extends Application {
 		}
 			
 		// height of squared total area
-		int maxHeight = (int) (Math.sqrt(totalArea) * transformFactor);
+		double areaHeight = Math.sqrt(totalArea) * transformFactor;
+		double prefHeight = Math.max(areaHeight, maxPaneHeight);
 		
-		// Setting the
-		// flowPane.setPrefWrapLength(Math.max(maxHeight, maxItemHeight) + 6 /*gaps*/);
+		prefHeight = Math.min(totalPanesHeight, areaHeight);
+		
+		// Setting preferred heights
 		flowPane.setPrefWrapLength(
-				totalNodesHeight + 
-				(nodes.size() - 1) * gap /*gaps, including label*/ //+ 
+				prefHeight
+				+ (panes.size() - 1) * gap /*gaps*/
+				// + 2 /*border*/
+		); 	
+		
+//		vBox.setPrefWrapLength(flowPane.getPrefWrapLength() + 
+//				12 /*label height*/ + 
+//				(showBorder ? 2 : 0) /*border around childFlowPane*/ +
 //				(usePadding ? 2 * gap : 0) /*padding*/
-		); 				
+//				);
 
 			
-		return flowPane;
+		return vBox;
 	}
 
 	private Pane createFilePane(File file) {
@@ -236,7 +264,7 @@ public class FlowPaneExample extends Application {
 
 		// add label
 		// Label newLabel = new Label(file.getName() + "\n" + (int)paneHeight + "x" + (int)paneWidth);
-		Label newLabel = new Label(file.getName() +  (int)paneHeight + "x" + (int)paneWidth);
+		Label newLabel = new Label(file.getName() + " " + (int)paneHeight + "x" + (int)paneWidth);
 		newLabel.setTextAlignment(TextAlignment.CENTER);
 		newLabel.setFont(new Font(8.0f));
 

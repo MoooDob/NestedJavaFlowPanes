@@ -78,3 +78,18 @@ While version 0.4a only provides a fixed file size presentation, in this version
 boolean useFixedFileSize = false;
 ```
 
+## V 0.5 Vertical layouted file structure
+
+![nested FlowPanes screenshot](./images/screenshot_05a.png)
+
+![nested FlowPanes screenshot](./images/screenshot_05b.png)
+
+This version is a mixture of the previous versions: the file and directories are block-wise layouted. In each block the items (single files or sub blocks) are ordered by alphabet. The items are printed in rows first and the they are promoted to the columns. The height of a block is determined by the total height of items (single files or sub blocks), the maximum height of all these items and the height of the squared area of all items like in version 0.2. This is the formula:
+
+```pseudocode
+areaHeight = Math.sqrt(totalArea) * transformFactor;
+prefBlockHeight = Math.max(areaHeight, maxPaneHeight);
+prefBlockHeight = Math.min(totalPanesHeight, areaHeight);
+prefBlockHeight += (# items - 1) * gap  	
+```
+You can colorize the background of the directories by turning the `showRandomDirectoryBackgroundColor` switch on.
