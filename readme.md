@@ -68,3 +68,13 @@ int gap = 3;
 ```
 This version aligns all node strait top down. 
 
+## V 0.4b Simple Vertical Layout with configurable file size 
+
+![nested FlowPanes screenshot](./images/screenshot_04b.png)
+
+While version 0.4a only provides a fixed file size presentation, in this version the file size is configurable:
+
+```java
+boolean useFixedFileSize = false;
+```
+

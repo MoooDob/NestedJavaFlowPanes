@@ -42,6 +42,7 @@ public class FlowPaneExample extends Application {
 	boolean showFiles = false;
 	boolean showBorder = false;
 	boolean usePadding = false;
+	boolean useFixedFileSize = false;
 
 	@Override
 	public void start(Stage stage) {
@@ -223,11 +224,9 @@ public class FlowPaneExample extends Application {
 			e.printStackTrace();
 		}
 
-
-//		double paneHeight = lineCtr;
-//		double paneWidth = maxLineLength;
-		double paneHeight = 12;
-		double paneWidth = 50;
+		
+		double paneHeight = useFixedFileSize ? 12 : lineCtr;
+		double paneWidth = useFixedFileSize ? 50 : maxLineLength;
 		
 		Pane newPane = new Pane();
 		newPane.setPrefSize(paneWidth, paneHeight);
