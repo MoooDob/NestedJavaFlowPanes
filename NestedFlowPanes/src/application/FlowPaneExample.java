@@ -18,6 +18,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -41,10 +43,13 @@ public class FlowPaneExample extends Application {
 	int gap = 3;
 	
 	boolean showFiles = true;
-	boolean showRandomDirectoryBackgroundColor = true;
+	boolean showRandomDirectoryBackgroundColor = false;
 	boolean showBorder = false;
 	boolean usePadding = true;
 	boolean useFixedFileSize = false;
+	
+	
+	Tooltip tooltip = new Tooltip("No Tooltip");
 
 	@Override
 	public void start(Stage stage) {
@@ -54,6 +59,11 @@ public class FlowPaneExample extends Application {
 
 		// mother of all flow panes
 		final Pane root; 
+		
+		// Prepare tooltip
+        tooltip.setConsumeAutoHidingEvents(true);
+    	tooltip.setTextAlignment(TextAlignment.LEFT);
+
 
 		// ask for directory
 
@@ -128,6 +138,7 @@ public class FlowPaneExample extends Application {
 
 		//nodes.add(newLabel);		
 		vBox.getChildren().add(newLabel);
+		
 		
 		FlowPane flowPane = new FlowPane(Orientation.VERTICAL);
 		vBox.getChildren().add(flowPane);
@@ -232,6 +243,10 @@ public class FlowPaneExample extends Application {
 //				);
 
 			
+		bindTooltip(vBox, tooltip);
+		bindTooltip(flowPane,tooltip);
+		bindTooltip(newLabel, tooltip);
+
 		return vBox;
 	}
 
@@ -274,6 +289,11 @@ public class FlowPaneExample extends Application {
 		newLabel.layoutYProperty().bind(newPane.heightProperty().subtract(newLabel.heightProperty()).divide(2));
 
 		newPane.getChildren().add(newLabel);
+		
+		bindTooltip(newPane, tooltip);
+		bindTooltip(newLabel, tooltip);
+
+
 
 		return newPane;
 	}
@@ -281,4 +301,33 @@ public class FlowPaneExample extends Application {
 	public static void main(String args[]) {
 		launch(args);
 	}
+	
+	public static void bindTooltip(final Node node, final Tooltip tooltip){
+		   node.setOnMouseMoved(new EventHandler<MouseEvent>(){
+		      @Override  
+		      public void handle(MouseEvent event) {
+		        // +15 moves the tooltip 15 pixels below the mouse cursor;
+		        // if you don't change the y coordinate of the tooltip, you
+		        // will see constant screen flicker
+		    	tooltip.setText(
+		    			node instanceof Label ? ((Label)node).getText() :
+		    				node instanceof FlowPane ? ((Label)((VBox)((FlowPane)node).getParent()).getChildren().get(0)).getText() :
+		    					node instanceof VBox || node instanceof Pane ? ((Label)((Pane)node).getChildren().get(0)).getText() :		    					
+		    						""		    			
+		    	);		    	
+		         tooltip.show(node, event.getScreenX() + 1 , event.getScreenY() - 30);
+//		         System.out.println(node.getClass().getName() + " " + tooltip.getText() + " MouseMove");
+		         event.consume();
+		      }
+		   });  
+		   node.setOnMouseExited(new EventHandler<MouseEvent>(){
+		      @Override
+		      public void handle(MouseEvent event){
+		         tooltip.hide();
+//		         System.out.println(node.getClass().getName() + " " + tooltip.getText() + " MouseExit");
+		         event.consume();
+		      }
+		   });
+		}
 }
+
