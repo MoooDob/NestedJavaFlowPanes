@@ -37,6 +37,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class FlowPaneExample extends Application {
 
@@ -133,6 +134,26 @@ public class FlowPaneExample extends Application {
 		// Displaying the contents of the stage
 		stage.show();	
 		
+		calcTreeArea(root);
+		
+	}
+
+	private Pair<Double, Double> calcTreeArea(Pane root) {
+		String name = ((Label)root.getChildren().get(0)).getText();
+		FlowPane flowPane = (FlowPane)root.getChildren().get(1);		
+		double totalArea = 0;
+		double usedArea = 0;
+		for (Node node : flowPane.getChildren()) {
+			if (node instanceof VBox) {
+				usedArea += calcTreeArea((VBox)node).getValue();
+			} else {
+				double area = ((Pane)node).getHeight() * ((Pane)node).getWidth(); 
+				usedArea += area;				
+			}
+		}
+		totalArea += ((Pane)root).getHeight() * ((Pane)root).getWidth();
+		System.out.println(String.format("%s: total=%+1.0fpx² used=%+1.0fpx² rel=%+1.2f", name , totalArea, usedArea, totalArea/usedArea));
+		return new Pair<Double, Double>(totalArea, usedArea);
 	}
 
 	private Pane createSubTree(File directory) {
