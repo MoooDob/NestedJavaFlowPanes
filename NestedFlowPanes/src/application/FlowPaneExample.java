@@ -2,9 +2,13 @@ package application;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+
+import org.apache.commons.io.FilenameUtils;
 
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -46,10 +50,21 @@ public class FlowPaneExample extends Application {
 	boolean showRandomDirectoryBackgroundColor = false;
 	boolean showBorder = false;
 	boolean usePadding = true;
-	boolean useFixedFileSize = false;
+	
+	// Files with this extension will be shown, null or empty array => all files 
+	final String[] fileExtensionFilter = {}; // {"java", "cpp", "h"} // null /*=> all*/
+	
+	// files with this extension will shown using their dimension (max line length x lines),
+	// other files will be shown using an equal sized rounded rectangle
+	// null or empty array => show all files with dimensions
+	final String[] dimensionDisplayExtensionFilter = {}; // {"java"}
 	
 	
+	// **********************
+	
+	// init the tooltip
 	Tooltip tooltip = new Tooltip("No Tooltip");
+	
 
 	@Override
 	public void start(Stage stage) {
@@ -64,6 +79,7 @@ public class FlowPaneExample extends Application {
         tooltip.setConsumeAutoHidingEvents(true);
     	tooltip.setTextAlignment(TextAlignment.LEFT);
 
+    	
 
 		// ask for directory
 
@@ -103,21 +119,26 @@ public class FlowPaneExample extends Application {
 		
 		// Creating a scene object
 		Scene scene = new Scene(scrollPane, 700, 800);
+		
+		System.out.println("1: " + root.getWidth());
 
 		// add stylesheet to scene
 		scene.getStylesheets().add("styles.css");
 		
-		
+		System.out.println("2: " + root.getWidth());
 
 		// Setting title to the Stage
 		stage.setTitle("Directory structure of " + selectedDirectory.getAbsolutePath());
 
 		// Adding scene to the stage
 		stage.setScene(scene);
+		
+		System.out.println("3: " + root.getWidth());
 
 		// Displaying the contents of the stage
 		stage.show();	
 		
+		System.out.println("4: " + root.getWidth());		
 	}
 
 	private Pane createSubTree(File directory) {
@@ -145,7 +166,17 @@ public class FlowPaneExample extends Application {
 		
 				
 		int numSubDirs = 0;
-		String[] subFilesAndDirectories = directory.list();		
+		String[] subFilesAndDirectories = directory.list(new FilenameFilter() {
+		    public boolean accept(File dir, String name) {
+		    	if (fileExtensionFilter == null || fileExtensionFilter.length == 0 ) {
+		    		// No Filter defined
+		    		return true;
+		    	} else {
+			    	// check if file extension is in the list of allowed extensions
+			        return Arrays.stream(fileExtensionFilter).anyMatch(FilenameUtils.getExtension(name.toLowerCase())::equals);
+		    	}
+		    };
+		});	
 
 		for (String fileOrDirectoryName : subFilesAndDirectories) {
 			
@@ -267,9 +298,20 @@ public class FlowPaneExample extends Application {
 			e.printStackTrace();
 		}
 
-		
-		double paneHeight = useFixedFileSize ? 12 : lineCtr;
-		double paneWidth = useFixedFileSize ? 50 : maxLineLength;
+		double paneHeight = 0;;
+		double paneWidth = 0;;
+        if (dimensionDisplayExtensionFilter == null 
+        		|| dimensionDisplayExtensionFilter.length == 0 
+        		|| Arrays.stream(dimensionDisplayExtensionFilter).anyMatch(FilenameUtils.getExtension(file.getName().toLowerCase())::equals)
+        		) {
+        	// extension is in dimensionDisplayExtensionFilter
+    		paneHeight = lineCtr;
+    		paneWidth = maxLineLength;        	
+        } else {
+        	// extension is not in dimensionDisplayExtensionFilter
+    		paneHeight = 12;
+    		paneWidth = 50;        
+        }
 		
 		Pane newPane = new Pane();
 		newPane.setPrefSize(paneWidth, paneHeight);
