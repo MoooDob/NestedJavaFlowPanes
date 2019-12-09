@@ -2,9 +2,12 @@ package application;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -52,6 +55,7 @@ public class FlowPaneExample extends Application {
 	boolean showRandomDirectoryBackgroundColor = false;
 	boolean showBorder = false;
 	boolean usePadding = true;
+	boolean showFilenames = false;
 	
 	// Files with this extension will be shown, null or empty array => all files 
 	final String[] fileExtensionFilter = {}; // {"java", "cpp", "h"} // null /*=> all*/
@@ -134,25 +138,35 @@ public class FlowPaneExample extends Application {
 		// Displaying the contents of the stage
 		stage.show();	
 		
-		calcTreeArea(root);
+		FileWriter csvWriter;
+		try {
+			csvWriter = new FileWriter("areas.csv");
+			csvWriter.append(String.format("\"name\",\"total px²\",\"used px²\",\"rel\"\n"));
+			calcTreeArea(csvWriter, root);
+			csvWriter.flush();
+			csvWriter.close();
+		} catch (IOException e) {
+			System.out.println("Problem while writing to areas.csv");
+		} finally {
+		}
 		
 	}
 
-	private Pair<Double, Double> calcTreeArea(Pane root) {
+	private Pair<Double, Double> calcTreeArea(FileWriter csvWriter, Pane root) throws IOException {
 		String name = ((Label)root.getChildren().get(0)).getText();
 		FlowPane flowPane = (FlowPane)root.getChildren().get(1);		
 		double totalArea = 0;
 		double usedArea = 0;
 		for (Node node : flowPane.getChildren()) {
 			if (node instanceof VBox) {
-				usedArea += calcTreeArea((VBox)node).getValue();
+				usedArea += calcTreeArea(csvWriter, (VBox)node).getValue();
 			} else {
 				double area = ((Pane)node).getHeight() * ((Pane)node).getWidth(); 
 				usedArea += area;				
 			}
 		}
 		totalArea += ((Pane)root).getHeight() * ((Pane)root).getWidth();
-		System.out.println(String.format("%s: total=%+1.0fpx² used=%+1.0fpx² rel=%+1.2f", name , totalArea, usedArea, totalArea/usedArea));
+		csvWriter.append(String.format(Locale.US, "%s,%1.0f,%1.0f,%1.2f\n", name , totalArea, usedArea, totalArea/usedArea));
 		return new Pair<Double, Double>(totalArea, usedArea);
 	}
 
@@ -335,10 +349,12 @@ public class FlowPaneExample extends Application {
 		+ ", " + randomizer.nextInt(255) + ", 0.5); -fx-background-radius: 10;");
 
 		// add label
+
 		// Label newLabel = new Label(file.getName() + "\n" + (int)paneHeight + "x" + (int)paneWidth);
 		Label newLabel = new Label(file.getName() + " " + (int)paneHeight + "x" + (int)paneWidth);
 		newLabel.setTextAlignment(TextAlignment.CENTER);
 		newLabel.setFont(new Font(8.0f));
+		newLabel.setVisible(showFilenames);
 
 		// centering label in pane:
 		// https://stackoverflow.com/questions/36854031/how-to-center-a-label-on-a-pane-in-javafx
@@ -346,9 +362,12 @@ public class FlowPaneExample extends Application {
 		newLabel.layoutYProperty().bind(newPane.heightProperty().subtract(newLabel.heightProperty()).divide(2));
 
 		newPane.getChildren().add(newLabel);
+
+
 		
 		bindTooltip(newPane, tooltip);
 		bindTooltip(newLabel, tooltip);
+
 
 
 
