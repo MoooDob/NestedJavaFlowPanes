@@ -65,6 +65,10 @@ public class FlowPaneExample extends Application {
 	// null or empty array => show all files with dimensions
 	final String[] dimensionDisplayExtensionFilter = {}; // {"java"}
 	
+	// files with this file name will be explicitly shown using their dimension 
+	// (max line length x lines)
+	final String[] dimensionDisplayFilenameFilter = {}; // {"readme.md"}
+	
 	
 	// **********************
 	
@@ -329,7 +333,8 @@ public class FlowPaneExample extends Application {
 
 		double paneHeight = 0;;
 		double paneWidth = 0;;
-        if (dimensionDisplayExtensionFilter == null 
+        if (Arrays.stream(dimensionDisplayFilenameFilter).anyMatch(file.getName().toLowerCase()::equals)
+        		|| dimensionDisplayExtensionFilter == null 
         		|| dimensionDisplayExtensionFilter.length == 0 
         		|| Arrays.stream(dimensionDisplayExtensionFilter).anyMatch(FilenameUtils.getExtension(file.getName().toLowerCase())::equals)
         		) {
