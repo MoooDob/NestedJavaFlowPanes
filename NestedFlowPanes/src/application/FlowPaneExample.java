@@ -33,6 +33,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -120,25 +121,18 @@ public class FlowPaneExample extends Application {
 		// Creating a scene object
 		Scene scene = new Scene(scrollPane, 700, 800);
 		
-		System.out.println("1: " + root.getWidth());
-
 		// add stylesheet to scene
 		scene.getStylesheets().add("styles.css");
 		
-		System.out.println("2: " + root.getWidth());
-
 		// Setting title to the Stage
 		stage.setTitle("Directory structure of " + selectedDirectory.getAbsolutePath());
 
 		// Adding scene to the stage
 		stage.setScene(scene);
 		
-		System.out.println("3: " + root.getWidth());
-
 		// Displaying the contents of the stage
 		stage.show();	
 		
-		System.out.println("4: " + root.getWidth());		
 	}
 
 	private Pane createSubTree(File directory) {
@@ -154,7 +148,7 @@ public class FlowPaneExample extends Application {
 		
 		// Add label
 		Label newLabel = new Label(directory.getName());
-		newLabel.setFont(new Font(8.0f));
+		newLabel.setFont(Font.font("System", FontWeight.BOLD, 8.0f));
 		//newLabel.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
 		//nodes.add(newLabel);		
