@@ -1,19 +1,16 @@
-# Nested FlowPanes in Java
+# Nested VBoxes and HBoxes in JavaFX
 
 playing around with nested `FlowPane`s in Java
 
-## V 0.1: two statically nested FlowPanes
-
-[91b8cc214d73975742ca01a9ada3eb9ee1fddd99](https://github.com/MoooDob/NestedJavaFlowPanes/commit/91b8cc214d73975742ca01a9ada3eb9ee1fddd99)
+## V 0.1: directory structure in nested VBoxes
 
 ![nested FlowPanes screenshot](./images/screenshot_01.png)
-
-
 
 The Panes are randomly created. The maximal height (`setPrefWrapLength`), the number of child panes and the background color of the parent pane can be set. The panes without child panes will be tinted in a random color. All items will be display from top to bottom in column-first order.
 
 The window is scrollable, resizable and pannable. The created panes wont be resized if the window is resized.
 
+<<<<<<< HEAD
 ## V 0.2: randomly created structures of nested FlowPanes
 
 ![nested FlowPanes screenshot](./images/screenshot_02.png)
@@ -134,3 +131,5 @@ Both presentations have the disadvantage of being less meaningful for getting an
 ![Lab color space](./images/Visible_gamut_within_CIELAB_color_space_D65_whitepoint_mesh.gif)
 
 The Lab color space by Michael Horvath (SharkD), Christoph Lipka [<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>], <a href="https://commons.wikimedia.org/wiki/File:Visible_gamut_within_CIELAB_color_space_D65_whitepoint_mesh.webm">via Wikimedia Commons</a>, original: https://upload.wikimedia.org/wikipedia/commons/4/45/Visible_gamut_within_CIELAB_color_space_D65_whitepoint_mesh.webm
+=======
+>>>>>>> branch 'develop' of https://github.com/MoooDob/NestedJavaFlowPanes.git
