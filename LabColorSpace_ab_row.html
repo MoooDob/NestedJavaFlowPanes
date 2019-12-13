@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+</style>
+<script src="https://d3js.org/d3.v4.0.0-alpha.45.js"></script>
+<script src="https://d3js.org/d3-hsv.v0.0.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v0.3.js"></script>
+
+<body>
+
+<canvas id="painting" width="960px" height="500px"></canvas></br>
+
+<input type="range" name="LSlider" id=LSlider min="0" max="100" value="50" style="width:960px;">
+<div id="L" style="width:960px; text-align: center;"></div>
+
+<script>    
+    // A function that update the chart when slider is moved?
+    function updateChart(L) {
+        document.getElementById("L").innerText = L;
+        var canvas = document.getElementById("painting");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(L, -100+127*x/canvas.width, -100+200*y/canvas.height);
+                ctx.fillRect(x, y, 1, 1);
+            });
+        });
+    }
+
+     // Listen to the slider?
+    d3.select("#LSlider").on("change", function(d){
+        selectedValue = this.value
+        updateChart(selectedValue)
+    })
+</script>
+
+<!-- Add a slider -->
+</body>
+

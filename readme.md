@@ -128,3 +128,9 @@ paneWidth = 12;
 ![nested FlowPanes screenshot](./images/screenshot_05bb.png)
 
 Both presentations have the disadvantage of being less meaningful for getting an impression of the size of the system components.
+
+## V 0.6 Flatted directory structure, semantic colorization
+
+![Lab color space](./images/Visible_gamut_within_CIELAB_color_space_D65_whitepoint_mesh.gif)
+
+The Lab color space by Michael Horvath (SharkD), Christoph Lipka [<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>], <a href="https://commons.wikimedia.org/wiki/File:Visible_gamut_within_CIELAB_color_space_D65_whitepoint_mesh.webm">via Wikimedia Commons</a>, original: https://upload.wikimedia.org/wikipedia/commons/4/45/Visible_gamut_within_CIELAB_color_space_D65_whitepoint_mesh.webm

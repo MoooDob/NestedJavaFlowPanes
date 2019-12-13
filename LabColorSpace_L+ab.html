@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+</style>
+<script src="https://d3js.org/d3.v4.0.0-alpha.45.js"></script>
+<script src="https://d3js.org/d3-hsv.v0.0.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v0.3.js"></script>
+
+<body>
+
+    <table class="objecttable">
+        <tbody></tbody>
+    </table>
+
+    <script>   
+
+    // create 10 x 10 matrix with L values
+    var Lmatrix = d3.range(0,9).map(i => d3.range(0 + i * 10, 10 + i * 10) ); 
+    canvas_width = 50;
+    canvas_height = 50;
+        
+        
+        // create table cells
+        var tr = d3.select(".objecttable tbody")
+            .selectAll("tr")
+            .data(Lmatrix)
+            .enter().append("tr");
+            
+        tr.selectAll("td")
+            .data(function(d, i) { return Object.values(d);})
+            .enter().append("td").append("canvas")
+                .attr("id", function(d) {return "id", "L" + d;})
+                .attr("height", canvas_height)
+                .attr("width", canvas_width);
+            
+
+        // create Lab charts
+        d3.range(0,100).forEach(function(L) {
+            var canvas = document.getElementById("L" + L);
+            var ctx = canvas.getContext("2d");
+            d3.range(0,canvas_width).forEach(function(x) {
+                d3.range(0, canvas_height).forEach(function(y) {
+                    a = -100+200*x/canvas_width;
+                    b = -100+200*y/canvas_height;                    
+                    ctx.fillStyle = d3.lab(L, a, b);
+                    ctx.fillRect(x, y, 1, 1);
+                });
+            });
+        });
+    </script>
+
+</body>
+

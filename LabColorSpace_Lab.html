@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+</style>
+<script src="https://d3js.org/d3.v4.0.0-alpha.45.js"></script>
+<script src="https://d3js.org/d3-hsv.v0.0.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v0.3.js"></script>
+
+<body>
+
+
+<canvas id="La1" width="50px" height="50px"></canvas><canvas id="ab" width="50px" height="50px"></canvas><canvas id="La" width="50px" height="50px"></canvas></br>
+<canvas id="Lb1" width="50px" height="50px"></canvas><canvas id="Lb" width="50px" height="50px"></canvas></br>
+
+<canvas id="La2" width="50px" height="50px"></canvas></br>
+<canvas id="La3" width="50px" height="50px"></canvas></br>
+<canvas id="La4" width="50px" height="50px"></canvas></br>
+
+<script>    
+
+        min_ab = -100;
+        max_ab = 100;
+        range_ab = max_ab - min_ab;
+        min_L = 0;
+        max_L = 100;
+        range_L = max_L - min_L;
+
+        // ab
+        var canvas = document.getElementById("ab");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(
+                    0, 
+                    min_ab+range_ab*x/canvas.width, 
+                    min_ab+range_ab*y/canvas.height
+                );
+                ctx.fillRect(x, y, 1, 1);
+            });
+        });
+
+        // La 
+        var canvas = document.getElementById("La");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(
+                    min_L+range_L*x/canvas.width, 
+                    100, 
+                    min_ab+range_ab*y/canvas.height
+                );
+                ctx.fillRect(x, y, 1, 1);
+            });
+        });
+
+        // Lb
+        var canvas = document.getElementById("Lb");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(
+                    min_L+range_L*x/canvas.width, 
+                    min_ab+range_ab*y/canvas.width, 
+                    0
+                );
+                ctx.fillRect(y, x, 1, 1);
+            });
+        });
+
+
+
+
+        // Lb
+        var canvas = document.getElementById("La1");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(
+                    min_L+range_L*x/canvas.width, 
+                    0, 
+                    min_ab+range_ab*y/canvas.height
+                );
+                ctx.fillRect(canvas.width - x, y, 1, 1);
+            });
+        });
+        // Lb
+        var canvas = document.getElementById("La2");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(
+                    min_L+range_L*y/canvas.width, 
+                    100, 
+                    min_ab+range_ab*x/canvas.height
+                );
+                ctx.fillRect(x, y, 1, 1);
+            });
+        });
+                // Lb
+                var canvas = document.getElementById("La3");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(
+                    min_L+range_L*y/canvas.width, 
+                    0, 
+                    min_ab+range_ab*x/canvas.height
+                );
+                ctx.fillRect(x, canvas.height - y, 1, 1);
+            });
+        });
+                // Lb
+                var canvas = document.getElementById("La4");
+        var ctx = canvas.getContext("2d");
+        d3.range(0, canvas.width).forEach(function(x) {
+            d3.range(0, canvas.height).forEach(function(y) {
+                ctx.fillStyle = d3.lab(
+                    min_L+range_L*x/canvas.width, 
+                    min_ab+range_ab*y/canvas.width, 
+                    0
+                );
+                ctx.fillRect(x, y, 1, 1);
+            });
+        });
+
+</script>
+
+</body>
+

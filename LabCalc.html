@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    table{
+        font-size: 6pt;
+    }
+</style>
+<script src="https://d3js.org/d3.v4.0.0-alpha.45.js"></script>
+
+<body>
+
+    <table class="objecttable">
+        <tbody></tbody>
+    </table>
+
+    <script>   
+
+    // create 10 x 10 matrix with L values
+    var ABmatrix = d3.range(-128,127).map(i => d3.range(-128 + i * 256, 127 + i * 256) );         
+        
+        // create table cells
+        var tr = d3.select(".objecttable tbody")
+            .selectAll("tr")
+            .data(ABmatrix)
+            .enter().append("tr");
+            
+        tr.selectAll("td")
+            .data(function(d, i) { return Object.values(d);})
+            .enter().append("td")
+            .text(d => d);
+            
+    </script>
+
+</body>
+
